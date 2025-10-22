@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
+
+# Set NASM compiler path before project()
+set(CMAKE_ASM_NASM_COMPILER "/usr/bin/nasm")
+
 project(simple_os ASM_NASM C)
 
 # Enable NASM
@@ -15,7 +19,7 @@ set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> 
 add_custom_command(
         OUTPUT boot.bin
         COMMAND nasm -f bin ${CMAKE_SOURCE_DIR}/boot.asm -o boot.bin
-        DEPENDS BL/boot.asm
+        DEPENDS boot.asm
         COMMENT "Building bootloader..."
 )
 
@@ -24,7 +28,7 @@ add_library(kernel_entry OBJECT kernel_entry.asm
         BL/kernel.c)
 
 # Kernel C code
-add_library(kernel_lib OBJECT BL/kernel.c)
+add_library(kernel_lib OBJECT kernel.c)
 
 # Link kernel
 add_custom_command(
